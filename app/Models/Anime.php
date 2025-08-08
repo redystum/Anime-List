@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Anime extends Model
 {
+    use HasFactory;
+
     protected $table = 'animes';
     public $incrementing = false;
 
@@ -45,8 +48,8 @@ class Anime extends Model
         return $this->belongsToMany(Studio::class, 'anime_studios', 'anime_id', 'studio_id');
     }
 
-    public function relatedAnime()
+    public function relatedAnimes()
     {
-        return $this->belongsToMany(Anime::class, 'anime_related_animes', 'anime_id', 'related_anime_id');
+        return $this->belongsToMany(RelatedAnime::class, 'anime_related_animes', 'anime_id', 'related_anime_id');
     }
 }

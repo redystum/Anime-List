@@ -12,7 +12,7 @@ return new class extends Migration {
     {
         Schema::create('images', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('mal_id')->index()->constrained('animes')->onDelete('cascade');
+            $table->foreignId('anime_id')->index()->constrained('animes')->onDelete('cascade');
             $table->string('url');
             $table->string('type')->default('picture')->only(['picture', 'main']);
         });

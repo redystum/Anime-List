@@ -21,8 +21,8 @@ return new class extends Migration {
             $table->float('score', 8)->default(0);
             $table->integer('num_scoring_usr')->default(0);
             $table->string('nsfw')->default('white')->only(['white', 'grey', 'black']);
-            $table->string('media_type')->default('tv');
-            $table->string('status')->default('finished_airing');
+            $table->string('media_type')->default('tv')->only(['tv', 'movie', 'ova', 'special', 'ona', 'music']);
+            $table->string('status')->default('finished_airing')->only(['finished_airing', 'currently_airing', 'not_yet_aired']);
             $table->integer('num_episodes')->default(0);
             $table->string('broadcast_weekday')->nullable();
             $table->string('broadcast_time')->nullable();
