@@ -1,8 +1,10 @@
-<div class="{{ $class ?? '' }}">
-
+<div id="{{ $list_name }}" class="scroll-mt-20">
     <div class="flex justify-between items-center mb-6">
         <div>
-            {{ $slot }}
+            <a href="#{{ $list_name }}" class="flex items-center space-x-4 text-xl">
+                <i class="fas fa-{{ $icon }}"></i>
+                <p>{{ $title }}</p>
+            </a>
         </div>
         <div class="flex space-x-2">
             <select class="px-4 py-2 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 focus:outline-none focus:ring-2 focus:ring-blue-500">

@@ -1,4 +1,4 @@
-<nav class="bg-white dark:bg-neutral-800 border-b border-neutral-200 dark:border-neutral-700 shadow-sm">
+<nav class="bg-white dark:bg-neutral-800 border-b border-neutral-200 dark:border-neutral-700 shadow-sm fixed top-0 z-50 w-full">
     <div class="container mx-auto px-4">
         <div class="flex items-center justify-between h-16">
             <div class="flex items-center space-x-6">
@@ -28,7 +28,32 @@
             </div>
 
             <div>
-                {{-- maybe i will add settings idk, but for now is just for centering the searchbar --}}
+                <ul class="flex items-center space-x-4">
+                    <li>
+                        <a href="#watching"
+                           class="text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:text-blue-500 dark:hover:text-blue-400">
+                            <i class="fas fa-eye"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#watch"
+                           class="text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:text-blue-500 dark:hover:text-blue-400">
+                            <i class="fas fa-tv"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#watched"
+                           class="text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:text-blue-500 dark:hover:text-blue-400">
+                            <i class="fas fa-check"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#favorites"
+                           class="text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:text-blue-500 dark:hover:text-blue-400">
+                            <i class="fas fa-heart"></i>
+                        </a>
+                    </li>
+                </ul>
             </div>
 
         </div>
@@ -51,4 +76,103 @@
         </div>
     </div>
 
+    <div class="absolute top-0 right-0 z-50 h-full me-8 md:flex items-center justify-center hidden text-neutral-900/20 dark:text-neutral-300/20 hover:text-neutral-900/100 hover:dark:text-neutral-300/100 transition-colors duration-200">
+        <i class="fas fa-thumbtack-slash cursor-pointer" id="pinNav"></i>
+        <i class="fas fa-thumbtack cursor-pointer" id="unpinNav"></i>
+    </div>
 </nav>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const pinNav = document.getElementById('pinNav');
+        const unpinNav = document.getElementById('unpinNav');
+        const navbar = document.querySelector('nav');
+        const navStateKey = 'navbarPinned';
+
+        function updateBodyPadding(pinned) {
+            const navHeight = navbar.offsetHeight;
+            if (pinned) {
+                document.body.style.paddingTop = navHeight + 'px';
+                document.documentElement.style.scrollPaddingTop = navHeight + 'px';
+            } else {
+                document.body.style.paddingTop = '0';
+                document.documentElement.style.scrollPaddingTop = navHeight + 'px';
+            }
+        }
+
+        function setState(pinned) {
+            if (pinned) {
+                pinNav.style.display = 'none';
+                unpinNav.style.display = 'block';
+                navbar.classList.remove('relative');
+                navbar.classList.add('fixed');
+            } else {
+                pinNav.style.display = 'block';
+                unpinNav.style.display = 'none';
+                navbar.classList.remove('fixed');
+                navbar.classList.add('relative');
+            }
+            updateBodyPadding(pinned);
+            localStorage.setItem(navStateKey, pinned ? 'true' : 'false');
+        }
+
+        const savedState = localStorage.getItem(navStateKey);
+        const isPinned = savedState !== 'false';
+        setState(isPinned);
+
+        pinNav.addEventListener('click', function () {
+            setState(true);
+        });
+
+        unpinNav.addEventListener('click', function () {
+            setState(false);
+        });
+
+        window.addEventListener('resize', function() {
+            const currentState = localStorage.getItem(navStateKey) !== 'false';
+            updateBodyPadding(currentState);
+        });
+
+        // Handle smooth scrolling with offset for anchor links
+        document.addEventListener('click', function(e) {
+            const link = e.target.closest('a[href^="#"]');
+            if (link) {
+                const href = link.getAttribute('href');
+                const targetId = href.substring(1);
+                const targetElement = document.getElementById(targetId);
+                
+                if (targetElement) {
+                    e.preventDefault();
+                    const navHeight = navbar.offsetHeight;
+                    const elementPosition = targetElement.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - navHeight - 20; // 20px extra padding
+                    
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Update URL hash
+                    history.pushState(null, null, href);
+                }
+            }
+        });
+
+        // Handle initial page load with hash
+        if (window.location.hash) {
+            setTimeout(() => {
+                const targetElement = document.querySelector(window.location.hash);
+                if (targetElement) {
+                    const navHeight = navbar.offsetHeight;
+                    const elementPosition = targetElement.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - navHeight - 20;
+                    
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            }, 100);
+        }
+    });
+</script>
