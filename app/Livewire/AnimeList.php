@@ -29,6 +29,9 @@ class AnimeList extends Component
         $this->icon = $icon;
         $this->title = $title;
         $this->haveAdd = $haveAdd;
+
+        if ($list_name == Anime::LIST_FAVORITE)
+            $this->sort = 'most_favorite';
     }
 
     public function render()
@@ -64,14 +67,14 @@ class AnimeList extends Component
     {
         $anime->watching = !$anime->watching;
         $anime->save();
-        $this->dispatch("update".Anime::LIST_WATCHING);
+        $this->dispatch("update" . Anime::LIST_WATCHING);
     }
 
     public function toggleFavorite(Anime $anime): void
     {
         $anime->favorite = !$anime->favorite;
         $anime->save();
-        $this->dispatch("update".Anime::LIST_FAVORITE);
+        $this->dispatch("update" . Anime::LIST_FAVORITE);
     }
 
     public function destroy(Anime $anime): void
@@ -83,6 +86,7 @@ class AnimeList extends Component
     private function sortToQuery($sort): array
     {
         return match ($sort) {
+            'recently_added' => ['created_at', 'desc'],
             'oldest_added' => ['created_at', 'asc'],
             'recent' => ['start_date', 'desc'],
             'oldest' => ['start_date', 'asc'],
@@ -94,7 +98,13 @@ class AnimeList extends Component
             'less_episodes' => ['num_episodes', 'asc'],
             'most_favorite' => ['localScore', 'desc'],
             'least_favorite' => ['localScore', 'asc'],
-            default => ['created_at', 'desc'],
+            default => function () {
+                if ($this->list_name == Anime::LIST_FAVORITE) {
+                    return ['localScore', 'desc'];
+                } else {
+                    return ['created_at', 'desc'];
+                }
+            }
         };
     }
 }

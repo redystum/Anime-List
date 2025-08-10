@@ -38,7 +38,7 @@
         @forelse($animes as $anime)
 
             <div class="group flex items-center p-4 border-b border-neutral-200 dark:border-neutral-700 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors overflow-visible"
-                 x-data="{ showNotePopup: false, showDeleteDialog: false }">
+                 x-data="{ showNotePopup: false }">
                 <div class="flex items-center space-x-2 mr-4 text-lg">
                     @if($anime->completed)
                         <button class="p-2 text-neutral-600 dark:text-neutral-400 hover:text-blue-600 dark:hover:text-blue-400 rounded-full transition-colors cursor-pointer"
@@ -158,45 +158,9 @@
                     </button>
 
                     <button class="p-2 text-neutral-600 dark:text-neutral-400 hover:text-red-600 dark:hover:text-red-400 rounded-full transition-colors cursor-pointer"
-                            @click="showDeleteDialog = true">
+                            wire:click="$dispatch('show-delete-dialog', { animeId: {{ $anime->id }}, animeTitle: '{{ addslashes($anime->title) }}' })">
                         <i class="fas fa-trash"></i>
                     </button>
-                </div>
-
-                <!-- Delete Confirmation Dialog -->
-                <div x-show="showDeleteDialog"
-                     x-cloak
-                     x-transition:enter="transition ease-out duration-300"
-                     x-transition:enter-start="opacity-0"
-                     x-transition:enter-end="opacity-100"
-                     x-transition:leave="transition ease-in duration-200"
-                     x-transition:leave-start="opacity-100"
-                     x-transition:leave-end="opacity-0"
-                     class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50"
-                     @click.self="showDeleteDialog = false">
-                    <div class="bg-white dark:bg-neutral-900 rounded-lg p-6 max-w-sm mx-4 border border-neutral-200 dark:border-neutral-700">
-                        <div class="text-center">
-                            <div class="mb-4">
-                                <i class="fas fa-exclamation-triangle text-red-500 text-3xl"></i>
-                            </div>
-                            <h3 class="text-lg font-semibold text-neutral-800 dark:text-neutral-200 mb-2">
-                                Delete Anime
-                            </h3>
-                            <p class="text-neutral-600 dark:text-neutral-400 mb-6">
-                                Are you sure you want to delete "{{ $anime->title }}" from your list? This action cannot be undone.
-                            </p>
-                            <div class="flex space-x-3">
-                                <button @click="showDeleteDialog = false"
-                                        class="cursor-pointer flex-1 px-4 py-2 bg-neutral-200 dark:bg-neutral-700 text-neutral-800 dark:text-neutral-200 rounded-lg hover:bg-neutral-300 dark:hover:bg-neutral-600 transition-colors">
-                                    Cancel
-                                </button>
-                                <button @click="$wire.destroy({{ $anime->id }}); showDeleteDialog = false"
-                                        class="cursor-pointer flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
-                                    Delete
-                                </button>
-                            </div>
-                        </div>
-                    </div>
                 </div>
 
             </div>
@@ -207,4 +171,5 @@
         @endforelse
 
     </div>
+
 </div>

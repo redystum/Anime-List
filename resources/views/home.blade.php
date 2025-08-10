@@ -12,6 +12,8 @@
 
         </div>
     </div>
+
+    <livewire:delete-dialog />
 @endsection
 
 @section('scripts')
