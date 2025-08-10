@@ -41,7 +41,7 @@ class AnimeFactory extends Factory
             'lastFetch' => $this->faker->dateTime(),
             'localScore' => $this->faker->randomFloat(1, 0, 10),
             'notes' => $this->faker->sentence,
-            'viewed' => $this->faker->boolean,
+            'completed' => $this->faker->boolean,
             'watching' => $this->faker->boolean,
         ];
     }

@@ -23,7 +23,7 @@ class ImageFactory extends Factory
         return [
             'anime_id' => Anime::get()->random()->id,
             'url' => GenImage($this->faker, "225x318"),
-            'type' => $this->faker->randomElement(['picture', 'main']),
+            'type' => 'picture',
         ];
     }
 }

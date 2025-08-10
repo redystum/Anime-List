@@ -25,8 +25,13 @@ class DatabaseSeeder extends Seeder
             $anime->genres()->attach(Genre::inRandomOrder()->take(rand(1, 5))->pluck('id')->toArray());
             $anime->studios()->attach(Studio::inRandomOrder()->take(rand(1, 3))->pluck('id')->toArray());
             $anime->relatedAnimes()->attach(RelatedAnime::inRandomOrder()->take(rand(1, 3))->pluck('id')->toArray());
+
+            Image::factory(1)->create([
+                'anime_id' => $anime->id,
+                'type' => 'cover',
+            ]);
         });
 
-        Image::factory(50)->create();
+        Image::factory(150)->create();
     }
 }

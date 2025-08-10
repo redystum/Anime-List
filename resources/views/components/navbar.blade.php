@@ -30,25 +30,25 @@
             <div>
                 <ul class="flex items-center space-x-4">
                     <li>
-                        <a href="#watching"
+                        <a href="#{{$Anime::LIST_WATCHING}}"
                            class="text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:text-blue-500 dark:hover:text-blue-400">
                             <i class="fas fa-eye"></i>
                         </a>
                     </li>
                     <li>
-                        <a href="#watch"
+                        <a href="#{{$Anime::LIST_WATCH}}"
                            class="text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:text-blue-500 dark:hover:text-blue-400">
                             <i class="fas fa-tv"></i>
                         </a>
                     </li>
                     <li>
-                        <a href="#watched"
+                        <a href="#{{$Anime::LIST_WATCHED}}"
                            class="text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:text-blue-500 dark:hover:text-blue-400">
                             <i class="fas fa-check"></i>
                         </a>
                     </li>
                     <li>
-                        <a href="#favorites"
+                        <a href="#{{$Anime::LIST_FAVORITE}}"
                            class="text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:text-blue-500 dark:hover:text-blue-400">
                             <i class="fas fa-heart"></i>
                         </a>
@@ -128,30 +128,30 @@
             setState(false);
         });
 
-        window.addEventListener('resize', function() {
+        window.addEventListener('resize', function () {
             const currentState = localStorage.getItem(navStateKey) !== 'false';
             updateBodyPadding(currentState);
         });
 
         // Handle smooth scrolling with offset for anchor links
-        document.addEventListener('click', function(e) {
+        document.addEventListener('click', function (e) {
             const link = e.target.closest('a[href^="#"]');
             if (link) {
                 const href = link.getAttribute('href');
                 const targetId = href.substring(1);
                 const targetElement = document.getElementById(targetId);
-                
+
                 if (targetElement) {
                     e.preventDefault();
                     const navHeight = navbar.offsetHeight;
                     const elementPosition = targetElement.getBoundingClientRect().top;
                     const offsetPosition = elementPosition + window.pageYOffset - navHeight - 20; // 20px extra padding
-                    
+
                     window.scrollTo({
                         top: offsetPosition,
                         behavior: 'smooth'
                     });
-                    
+
                     // Update URL hash
                     history.pushState(null, null, href);
                 }
@@ -166,7 +166,7 @@
                     const navHeight = navbar.offsetHeight;
                     const elementPosition = targetElement.getBoundingClientRect().top;
                     const offsetPosition = elementPosition + window.pageYOffset - navHeight - 20;
-                    
+
                     window.scrollTo({
                         top: offsetPosition,
                         behavior: 'smooth'

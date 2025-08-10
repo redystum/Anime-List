@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('anime_id')->index()->constrained('animes')->onDelete('cascade');
             $table->string('url');
-            $table->string('type')->default('picture')->only(['picture', 'main']);
+            $table->enum('type', ['picture', 'cover'])->default('picture');
         });
     }
 

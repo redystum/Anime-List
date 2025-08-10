@@ -20,9 +20,9 @@ return new class extends Migration {
             $table->text('synopsis')->nullable();
             $table->float('score', 8)->default(0);
             $table->integer('num_scoring_usr')->default(0);
-            $table->string('nsfw')->default('white')->only(['white', 'grey', 'black']);
-            $table->string('media_type')->default('tv')->only(['tv', 'movie', 'ova', 'special', 'ona', 'music']);
-            $table->string('status')->default('finished_airing')->only(['finished_airing', 'currently_airing', 'not_yet_aired']);
+            $table->enum('nsfw', ['white', 'grey', 'black'])->default('white');
+            $table->enum('media_type', ['tv', 'movie', 'ova', 'special', 'ona', 'music'])->default('tv');
+            $table->enum('status', ['finished_airing', 'currently_airing', 'not_yet_aired'])->default('finished_airing');
             $table->integer('num_episodes')->default(0);
             $table->string('broadcast_weekday')->nullable();
             $table->string('broadcast_time')->nullable();
@@ -33,7 +33,7 @@ return new class extends Migration {
             $table->dateTime('lastFetch')->useCurrent();
             $table->float('localScore', 8)->nullable();
             $table->text('notes')->nullable();
-            $table->boolean('viewed')->default(false);
+            $table->boolean('completed')->default(false);
             $table->boolean('watching')->default(false);
             $table->timestamps();
         });

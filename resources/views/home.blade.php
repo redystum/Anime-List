@@ -4,11 +4,23 @@
     <div class="min-h-screen bg-neutral-50 dark:bg-neutral-900 transition-colors duration-200">
         <div class="container mx-auto px-4 py-8 grid gap-y-8">
 
-            <livewire:anime-list list_name="watching" icon="eye" title="Watching now"/>
-            <livewire:anime-list list_name="watch" icon="tv" title="To Watch"/>
-            <livewire:anime-list list_name="watched" icon="check" title="Already Watched"/>
-            <livewire:anime-list list_name="favorites" icon="heart" title="Favorites"/>
+            <livewire:anime-list list_name="{{$Anime::LIST_WATCHING}}" icon="eye" title="Watching now"
+                                 :haveAdd="true"/>
+            <livewire:anime-list list_name="{{$Anime::LIST_WATCH}}" icon="tv" title="To Watch"/>
+            <livewire:anime-list list_name="{{$Anime::LIST_WATCHED}}" icon="check" title="Already Watched"/>
+            <livewire:anime-list list_name="{{$Anime::LIST_FAVORITE}}" icon="heart" title="Favorites"/>
 
         </div>
     </div>
+@endsection
+
+@section('scripts')
+    <script>
+        function focusOnSearch() {
+            const searchInput = document.querySelector('nav input[type="text"]');
+            if (searchInput) {
+                searchInput.focus();
+            }
+        }
+    </script>
 @endsection

@@ -9,6 +9,16 @@ class Anime extends Model
 {
     use HasFactory;
 
+    const LIST_WATCHING = 'watching';
+    const LIST_WATCH = 'watch';
+    const LIST_WATCHED = 'watched';
+    const LIST_FAVORITE = 'favorite';
+
+    const NSFW_WHITE = 'white';
+    const NSFW_GREY = 'grey';
+    const NSFW_BLACK = 'black';
+
+
     protected $table = 'animes';
     public $incrementing = false;
 
@@ -34,7 +44,7 @@ class Anime extends Model
         'lastFetch',
         'localScore',
         'notes',
-        'viewed',
+        'completed',
         'watching',
     ];
 
@@ -51,5 +61,15 @@ class Anime extends Model
     public function relatedAnimes()
     {
         return $this->belongsToMany(RelatedAnime::class, 'anime_related_animes', 'anime_id', 'related_anime_id');
+    }
+
+    public function images()
+    {
+        return $this->hasMany(Image::class, 'anime_id', 'id');
+    }
+
+    public function cover()
+    {
+        return $this->images()->where('type', 'cover')->first()->url ?? null;
     }
 }
