@@ -15,3 +15,7 @@
     -webkit-appearance: none !important;
     -moz-appearance: textfield !important;
 }
+
+.highlight{
+    @apply bg-purple-200 dark:bg-purple-500/30;
+}

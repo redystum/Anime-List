@@ -36,8 +36,7 @@
 
     <div class="bg-neutral-100 dark:bg-neutral-800 rounded-lg shadow-sm border border-neutral-200 dark:border-neutral-700 overflow-visible">
         @forelse($animes as $anime)
-
-            <div class="group flex items-center p-4 border-b border-neutral-200 dark:border-neutral-700 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors overflow-visible"
+            <div id="anime-{{ $anime->id }}" class="group flex items-center p-4 border-b border-neutral-200 dark:border-neutral-700 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors overflow-visible"
                  x-data="{ showNotePopup: false }">
                 <div class="flex items-center space-x-2 mr-4 text-lg">
                     @if($anime->completed)

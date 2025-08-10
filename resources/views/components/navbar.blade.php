@@ -9,22 +9,8 @@
                 </a>
             </div>
 
-            {{-- TODO: Replace this search by the other one on the other project #recycle --}}
-            <div class="flex-1 max-w-xl ms-4 hidden md:block">
-                <div class="relative">
-                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <svg class="h-5 w-5 text-neutral-400 dark:text-neutral-500" fill="none" stroke="currentColor"
-                             viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                        </svg>
-                    </div>
-                    <input
-                            type="text"
-                            placeholder="Search or add anime..."
-                            class="block w-full pl-10 pr-3 py-2 border border-neutral-300 dark:border-neutral-700 rounded-md bg-white dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    >
-                </div>
+            <div class="hidden lg:block w-full">
+                <livewire:search-dropdown/>
             </div>
 
             <div>
@@ -58,27 +44,14 @@
 
         </div>
 
-        <div class="flex-1 max-w-xl my-4 block md:hidden">
-            <div class="relative">
-                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <svg class="h-5 w-5 text-neutral-400 dark:text-neutral-500" fill="none" stroke="currentColor"
-                         viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                    </svg>
-                </div>
-                <input
-                        type="text"
-                        placeholder="Search or add anime..."
-                        class="block w-full pl-10 pr-3 py-2 border border-neutral-300 dark:border-neutral-700 rounded-md bg-white dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                >
-            </div>
+        <div class="flex-1 w-full my-4 block lg:hidden">
+            <livewire:search-dropdown/>
         </div>
     </div>
 
     <div class="absolute top-0 right-0 z-50 h-full me-8 md:flex items-center justify-center hidden text-neutral-900/20 dark:text-neutral-300/20 hover:text-neutral-900/100 hover:dark:text-neutral-300/100 transition-colors duration-200">
-        <i class="fas fa-thumbtack-slash cursor-pointer" id="pinNav"></i>
-        <i class="fas fa-thumbtack cursor-pointer" id="unpinNav"></i>
+        <i class="fas fa-thumbtack cursor-pointer" id="pinNav"></i>
+        <i class="fas fa-thumbtack-slash cursor-pointer" id="unpinNav"></i>
     </div>
 </nav>
 
@@ -174,5 +147,36 @@
                 }
             }, 100);
         }
+
+        window.Livewire.on('scroll-to', (params) => {
+            const [url, isAnime] = params;
+            const element = document.querySelector(url);
+
+            if (element) {
+                const navHeight = navbar.offsetHeight;
+                const elementPosition = element.getBoundingClientRect().top;
+                const screenHeight = window.innerHeight;
+
+                let offsetPosition;
+                if (isAnime) {
+                    offsetPosition = elementPosition + window.pageYOffset - screenHeight / 2 + 20;
+                } else {
+                    offsetPosition = elementPosition + window.pageYOffset - navHeight - 20;
+                }
+
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                });
+
+                if (isAnime) {
+                    element.classList.add('highlight');
+                    setTimeout(() => {
+                        element.classList.remove('highlight');
+                    }, 2000);
+                }
+
+            }
+        });
     });
 </script>
