@@ -13,7 +13,8 @@
         </div>
     </div>
 
-    <livewire:delete-dialog />
+    <livewire:delete-dialog/>
+    <livewire:info-modal/>
 @endsection
 
 @section('scripts')

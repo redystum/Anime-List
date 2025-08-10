@@ -58,7 +58,9 @@ class AnimeList extends Component
     public function toggleCompleted(Anime $anime): void
     {
         $anime->completed = !$anime->completed;
-        $anime->watching = false;
+        if ($anime->completed) {
+            $anime->watching = false;
+        }
         $anime->save();
         $this->dispatch("updateAll");
     }
@@ -67,19 +69,13 @@ class AnimeList extends Component
     {
         $anime->watching = !$anime->watching;
         $anime->save();
-        $this->dispatch("update" . Anime::LIST_WATCHING);
+        $this->dispatch("updateAll");
     }
 
     public function toggleFavorite(Anime $anime): void
     {
         $anime->favorite = !$anime->favorite;
         $anime->save();
-        $this->dispatch("update" . Anime::LIST_FAVORITE);
-    }
-
-    public function destroy(Anime $anime): void
-    {
-        $anime->delete();
         $this->dispatch("updateAll");
     }
 

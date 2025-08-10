@@ -15,7 +15,7 @@ class Anime extends Model
     const LIST_FAVORITE = 'favorite';
 
     const NSFW_WHITE = 'white';
-    const NSFW_GREY = 'grey';
+    const NSFW_GRAY = 'grey';
     const NSFW_BLACK = 'black';
 
 

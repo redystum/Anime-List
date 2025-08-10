@@ -92,7 +92,7 @@
                         @if($anime->nsfw == $Anime::NSFW_BLACK)
                             <span class="text-red-600/80 dark:text-red-400/80">NSFW</span>
                             <span class="mx-2">•</span>
-                        @elseif($anime->nsfw == $Anime::NSFW_GREY)
+                        @elseif($anime->nsfw == $Anime::NSFW_GRAY)
                             <span class="text-yellow-600/80 dark:text-yellow-400/80">Mature</span>
                             <span class="mx-2">•</span>
                         @endif
@@ -153,7 +153,8 @@
 
                 <div class="md:opacity-0 space-x-2 text-lg md:group-hover:opacity-100 flex">
 
-                    <button class="p-2 text-neutral-600 dark:text-neutral-400 hover:text-blue-600 dark:hover:text-blue-400 rounded-full transition-colors cursor-pointer">
+                    <button class="p-2 text-neutral-600 dark:text-neutral-400 hover:text-blue-600 dark:hover:text-blue-400 rounded-full transition-colors cursor-pointer"
+                            wire:click="$dispatch('show-info-modal', { animeId: {{ $anime->id }} })">
                         <i class="fas fa-info-circle"></i>
                     </button>
 
