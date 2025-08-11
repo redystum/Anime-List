@@ -62,21 +62,19 @@ class SearchNewAnime extends Component
                 $this->dispatch('show-no-mal-client-id-found', $response['error']);
                 $this->closeModal();
             }
-            dd($response);
-            // todo show toast error 404
+            $this->dispatch("showToast", "The anime could not be found.", 'error');
             return;
         }
-
         $this->closeModal();
 
         $anime = MalApiRequest::responseToAnime($response);
         if ($anime == null) {
-            // todo show toast error
-            dd($response);
+            $this->dispatch("showToast", "The anime could not be found.", 'error');
             return;
         }
 
         $this->dispatch("update".Anime::LIST_WATCH);
-        // TODO: show toast success
+        $this->dispatch("showToast","Anime '{$anime->title}' has been added to your watch list.", 'success');
+
     }
 }

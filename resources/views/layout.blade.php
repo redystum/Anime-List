@@ -17,7 +17,7 @@
 
 <body class="bg-white dark:bg-neutral-900 text-gray-900 dark:text-neutral-100">
 
-{{--<x-toast/>--}}
+<livewire:toasts/>
 
 <x-navbar/>
 

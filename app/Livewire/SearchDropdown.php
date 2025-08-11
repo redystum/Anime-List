@@ -156,25 +156,28 @@ class SearchDropdown extends Component
             if (isset($response['error'])) {
                 if (isset($response['need_token']) && $response['need_token']) {
                     $this->dispatch('show-no-mal-client-id-found', $response['error']);
-                    $this->closeDropdown();
+                    $this->closeModal();
                 }
-                dd($response);
-                // todo show toast error 404
+                $this->dispatch("showToast", "The anime could not be found.", 'error');
                 return;
             }
 
             $anime = MalApiRequest::responseToAnime($response);
             if ($anime == null) {
-                // todo show toast error
-                dd($response);
+                $this->dispatch("showToast", "The anime could not be found.", 'error');
                 return;
             }
 
-            // TODO: show toast success
-            $this->dispatch("update".Anime::LIST_WATCH);
-
             $this->resetInput();
             $this->closeDropdown();
+
+            $this->dispatch("update" . Anime::LIST_WATCH);
+
+            if (Anime::where('id', $anime->id)->exists())
+                $this->dispatch("showToast", "Anime '{$anime->title}' is already on your watch list. Information have been updated", 'info');
+            else
+                $this->dispatch("showToast", "Anime '{$anime->title}' has been added to your watch list.", 'success');
+
             return;
         }
 

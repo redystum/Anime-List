@@ -88,19 +88,41 @@ class InfoModal extends Component
                 $this->dispatch('show-no-mal-client-id-found', $response['error']);
                 $this->closeModal();
             }
-            dd($response);
-            // todo show toast error 404
+            $this->dispatch("showToast", "The anime could not be found.", 'error');
             return;
         }
 
         $anime = MalApiRequest::responseToAnime($response);
         if ($anime == null) {
-            // todo show toast error
-            dd($response);
+            $this->dispatch("showToast", "The anime could not be found.", 'error');
             return;
         }
 
         $this->dispatch("update".Anime::LIST_WATCH);
-        // TODO: show toast success
+        $this->dispatch("showToast","Anime '{$anime->title}' has been added to your watch list.", 'success');
+    }
+
+    public function updateAnimeInfo(){
+        if ($this->anime) {
+            $response = MalApiRequest::getAnime($this->anime->id);
+            if (isset($response['error'])) {
+                if (isset($response['need_token']) && $response['need_token']) {
+                    $this->dispatch('show-no-mal-client-id-found', $response['error']);
+                    return;
+                }
+                $this->dispatch("showToast", "The anime could not be found.", 'error');
+                return;
+            }
+
+            $updatedAnime = MalApiRequest::responseToAnime($response);
+            if ($updatedAnime == null) {
+                $this->dispatch("showToast", "The anime could not be found.", 'error');
+                return;
+            }
+
+            $this->anime = $updatedAnime;
+            $this->dispatch("updateAll");
+            $this->dispatch("showToast", "Anime information has been updated successfully.", 'success');
+        }
     }
 }
