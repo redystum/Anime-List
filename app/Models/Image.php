@@ -13,13 +13,13 @@ class Image extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'mal_id',
+        'anime_id',
         'url',
         'type',
     ];
 
     public function anime()
     {
-        return $this->belongsTo(Anime::class, 'mal_id', 'id');
+        return $this->belongsTo(Anime::class, 'anime_id', 'id');
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Anime;
+use App\Services\MalApiRequest;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
@@ -33,7 +34,7 @@ class InfoModal extends Component
                 $this->dispatch("updateAll");
             }
         }
-        
+
         $this->show = false;
         $this->anime = null;
     }
@@ -81,6 +82,25 @@ class InfoModal extends Component
 
     public function addToList(int $animeId)
     {
-        // TODO
+        $response = MalApiRequest::getAnime($animeId);
+        if (isset($response['error'])) {
+            if (isset($response['need_token']) && $response['need_token']) {
+                $this->dispatch('show-no-mal-client-id-found', $response['error']);
+                $this->closeModal();
+            }
+            dd($response);
+            // todo show toast error 404
+            return;
+        }
+
+        $anime = MalApiRequest::responseToAnime($response);
+        if ($anime == null) {
+            // todo show toast error
+            dd($response);
+            return;
+        }
+
+        $this->dispatch("update".Anime::LIST_WATCH);
+        // TODO: show toast success
     }
 }

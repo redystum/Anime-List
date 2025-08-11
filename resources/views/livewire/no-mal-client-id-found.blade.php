@@ -35,7 +35,13 @@
                         <input type="text" 
                                wire:model="clientId"
                                placeholder="Enter MAL Client ID"
-                               class="w-full px-3 py-2 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                               class="w-full px-3 py-2 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 focus:outline-none focus:ring-2 focus:ring-blue-500
+                               @if($error) border-red-500 dark:border-red-400 @endif">
+                        @if($error)
+                            <div class="text-red-500 dark:text-red-400 text-sm mt-1">
+                                {{ $error }}
+                            </div>
+                        @endif
                     </div>
                     
                     <div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700 rounded-lg p-3 mb-4">

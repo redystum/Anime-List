@@ -3,6 +3,8 @@
 namespace App\Livewire;
 
 use App\Models\Anime;
+use App\Services\MalApiRequest;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
 class SearchDropdown extends Component
@@ -43,6 +45,14 @@ class SearchDropdown extends Component
     {
         if (strlen($this->query) < 1) {
             $this->results = [];
+            return;
+        }
+
+        if (str_starts_with($this->query, 'id:')) {
+            $id = substr($this->query, 3);
+            $animes = Anime::where(DB::raw('CAST(id AS CHAR)'), 'LIKE', "%{$id}%")->get();
+            $this->results = $animes;
+            $this->results_pages = [];
             return;
         }
 
@@ -117,7 +127,7 @@ class SearchDropdown extends Component
 
         $targetIndex = $this->clamp($targetIndex, 0, count($this->results) - 1);
 
-        $this->dispatch("scroll-to", '#anime-'.$this->results[$targetIndex]->id, true);
+        $this->dispatch("scroll-to", '#anime-' . $this->results[$targetIndex]->id, true);
         $this->closeDropdown();
     }
 
@@ -141,8 +151,28 @@ class SearchDropdown extends Component
 
         if (str_starts_with($query, 'id:')) {
             $id = substr($query, 3);
-            dd($query, $id);
-            // TODO
+
+            $response = MalApiRequest::getAnime($id);
+            if (isset($response['error'])) {
+                if (isset($response['need_token']) && $response['need_token']) {
+                    $this->dispatch('show-no-mal-client-id-found', $response['error']);
+                    $this->closeDropdown();
+                }
+                dd($response);
+                // todo show toast error 404
+                return;
+            }
+
+            $anime = MalApiRequest::responseToAnime($response);
+            if ($anime == null) {
+                // todo show toast error
+                dd($response);
+                return;
+            }
+
+            // TODO: show toast success
+            $this->dispatch("update".Anime::LIST_WATCH);
+
             $this->resetInput();
             $this->closeDropdown();
             return;

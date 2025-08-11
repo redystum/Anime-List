@@ -3,9 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Anime;
-use App\Models\Token;
-use Illuminate\Http\Client\ConnectionException;
-use Illuminate\Support\Facades\Http;
+use App\Services\MalApiRequest;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
@@ -32,10 +30,14 @@ class SearchNewAnime extends Component
 
     public function render()
     {
-        $animes = $this->searchAnime($this->query);
+        $animes = MalApiRequest::searchAnime($this->query);
 
         if (isset($animes['error'])) {
             $this->animes = null;
+            if (isset($animes['need_token']) && $animes['need_token']) {
+                $this->dispatch('show-no-mal-client-id-found', $animes['error']);
+                $this->closeModal();
+            }
             return view('livewire.search-new-anime', ['error' => $animes['message']]);
         }
 
@@ -52,43 +54,29 @@ class SearchNewAnime extends Component
         return view('livewire.search-new-anime');
     }
 
-    private function searchAnime(string $animeName)
+    public function addToList($animeId)
     {
-        if (empty($animeName)) {
-            return [];
-        }
-
-        $token = config('app.api_keys.mal_client_id');
-
-        if (empty($token)) {
-            $token = Token::getClientId();
-            if (empty($token)) {
-                $this->dispatch('show-no-mal-client-id-found');
+        $response = MalApiRequest::getAnime($animeId);
+        if (isset($response['error'])) {
+            if (isset($response['need_token']) && $response['need_token']) {
+                $this->dispatch('show-no-mal-client-id-found', $response['error']);
                 $this->closeModal();
-                return ['error' => 'No MAL Client ID found', 'message' => 'Please set your MAL Client ID in the application configuration.'];
             }
+            dd($response);
+            // todo show toast error 404
+            return;
         }
 
-        try {
-            $response = Http::withHeaders([
-                'X-MAL-CLIENT-ID' => $token,
-            ])->get('https://api.myanimelist.net/v2/anime', [
-                'q' => $animeName,
-                'limit' => 15,
-            ]);
-        } catch (ConnectionException $e) {
-            return ['error' => 'Connection error', 'message' => $e->getMessage()];
+        $this->closeModal();
+
+        $anime = MalApiRequest::responseToAnime($response);
+        if ($anime == null) {
+            // todo show toast error
+            dd($response);
+            return;
         }
 
-        if ($response->successful()) {
-            return $response->json();
-        }
-
-        return ['error' => $response->status(), 'message' => $response->body()];
-    }
-
-    public function addToList()
-    {
-        // TODO
+        $this->dispatch("update".Anime::LIST_WATCH);
+        // TODO: show toast success
     }
 }

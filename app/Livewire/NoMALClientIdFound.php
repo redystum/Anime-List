@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Token;
+use App\Services\MalApiRequest;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
@@ -10,11 +11,14 @@ class NoMALClientIdFound extends Component
 {
     public $show = false;
     public $clientId = '';
+    public $error = null;
 
     #[On('show-no-mal-client-id-found')]
-    public function showDialog()
+    public function showDialog($error = null)
     {
         $this->show = true;
+        $this->clientId = '';
+        $this->error = $error;
     }
 
     public function closeDialog()
@@ -29,8 +33,14 @@ class NoMALClientIdFound extends Component
             return;
         }
 
-        Token::saveClientId($this->clientId);
-        $this->closeDialog();
+        if (MalApiRequest::testToken($this->clientId)) {
+            Token::saveClientId($this->clientId);
+            $this->closeDialog();
+            $this->error = null;
+            return;
+        }
+
+        $this->error = 'The provided MAL Client ID is invalid. Please check and try again.';
     }
 
     public function render()
