@@ -5,7 +5,9 @@
                 <a href="#" class="flex items-center">
                     <img src="{{ asset('images/logo.png') }}" alt="Logo"
                          class="h-8 w-8">
-                    <span class="ml-2 text-xl font-bold text-neutral-800 dark:text-neutral-100">{{ config('app.name') }}</span>
+                    <span class="ml-2 text-xl font-bold text-neutral-800 dark:text-neutral-100 text-nowrap">
+                        {{ config('app.name') }}
+                    </span>
                 </a>
             </div>
 

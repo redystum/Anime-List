@@ -29,7 +29,7 @@
             @else
                 @foreach($results as $index => $result)
                     <div
-                            class="flex items-center justify-between px-4 py-2 text-sm text-gray-700 dark:text-neutral-300 hover:bg-gray-100 dark:hover:bg-neutral-700 {{ $selectedIndex === $index ? 'bg-gray-100 dark:bg-neutral-700' : '' }}"
+                            class="cursor-pointer flex items-center justify-between px-4 py-2 text-sm text-gray-700 dark:text-neutral-300 hover:bg-gray-100 dark:hover:bg-neutral-700 {{ $selectedIndex === $index ? 'bg-gray-100 dark:bg-neutral-700' : '' }}"
                             wire:click.prevent="selectItem({{ $index }})"
                             wire:key="search-result-{{ $index }}"
                     >
@@ -95,7 +95,7 @@
                 @endforeach
                 @foreach($results_pages as $index => $result)
                     <div
-                            class="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-neutral-300 hover:bg-gray-100 dark:hover:bg-neutral-700 {{ $selectedIndex === ($index + count($results)) ? 'bg-gray-100 dark:bg-neutral-700' : '' }}"
+                            class="cursor-pointer flex items-center px-4 py-2 text-sm text-gray-700 dark:text-neutral-300 hover:bg-gray-100 dark:hover:bg-neutral-700 {{ $selectedIndex === ($index + count($results)) ? 'bg-gray-100 dark:bg-neutral-700' : '' }}"
                             wire:click.prevent="selectPage({{ $index }})"
                             wire:key="search-result-{{ $index + count($results) }}"
                     >
@@ -109,6 +109,22 @@
                     </div>
                 @endforeach
             @endif
+            <div
+                    class="cursor-pointer flex items-center px-4 py-2 text-sm text-gray-700 dark:text-neutral-300 hover:bg-gray-100 dark:hover:bg-neutral-700 {{ $selectedIndex === (count($results) + count($results_pages)) ? 'bg-gray-100 dark:bg-neutral-700' : '' }}"
+                    wire:click.prevent="addAnime()"
+                    wire:key="search-result-add-anime"
+            >
+                <div
+                        class="h-8 w-8 mr-3 rounded-full overflow-hidden bg-neutral-200 dark:bg-neutral-700 flex items-center justify-center">
+                    <i class="fas fa-search-plus text-neutral-500"></i>
+                </div>
+                <div>
+                    <div class="text-lg text-neutral-100">{{ $query }}</div>
+                    <div class="text-xs text-gray-500 dark:text-neutral-400">
+                        Search and add this anime to your list.
+                    </div>
+                </div>
+            </div>
         </div>
     @endif
 </div>

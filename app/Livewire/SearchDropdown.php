@@ -61,7 +61,7 @@ class SearchDropdown extends Component
         $animes = Anime::whereLike('title', "%{$this->query}%")
             ->orWhereLike('title_en', "%{$this->query}%")
             ->orWhereLike('title_jp', "%{$this->query}%")
-            ->limit(10)
+            ->limit(5)
             ->get();
 
         $mappedPages = $filteredPages->map(function ($page) {
@@ -79,7 +79,7 @@ class SearchDropdown extends Component
     // Navigate to previous item
     public function incrementIndex()
     {
-        $totalResults = count($this->results) + count($this->results_pages);
+        $totalResults = count($this->results) + count($this->results_pages) + 1; // +1 -> add anime
         if ($totalResults > 0) {
             $this->selectedIndex = $this->selectedIndex === $totalResults - 1 ? 0 : $this->selectedIndex + 1;
         }
@@ -88,7 +88,7 @@ class SearchDropdown extends Component
     // Navigate to next item
     public function decrementIndex()
     {
-        $totalResults = count($this->results) + count($this->results_pages);
+        $totalResults = count($this->results) + count($this->results_pages) + 1; // +1 -> add anime
 
         if ($totalResults > 0) {
             $this->selectedIndex = $this->selectedIndex === 0 || $this->selectedIndex === -1 ? $totalResults - 1 : $this->selectedIndex - 1;
@@ -97,32 +97,59 @@ class SearchDropdown extends Component
 
     public function selectItem(int $index = null)
     {
-        if ($index == null) {
-            $index = $this->selectedIndex;
-        }
-
-        if ($index > count($this->results) - 1) {
-            $index -= count($this->results);
-            $this->selectPage($index);
+        if (count($this->results) == 0 && count($this->results_pages) == 0) {
+            $this->addAnime();
             return;
         }
 
-        $index = $this->clamp($index, 0, count($this->results) - 1);
+        $targetIndex = $index !== null ? $index : $this->selectedIndex;
 
-//        $this->dispatch("show-info-modal", $this->results[$index]->id);
-        $this->dispatch("scroll-to", '#anime-'.$this->results[$index]->id, true);
+        if ($targetIndex > count($this->results) + count($this->results_pages) - 1) {
+            $this->addAnime();
+            return;
+        }
+
+        if ($targetIndex > count($this->results) - 1) {
+            $pageIndex = $targetIndex - count($this->results);
+            $this->selectPage($pageIndex);
+            return;
+        }
+
+        $targetIndex = $this->clamp($targetIndex, 0, count($this->results) - 1);
+
+        $this->dispatch("scroll-to", '#anime-'.$this->results[$targetIndex]->id, true);
         $this->closeDropdown();
     }
 
     public function selectPage(int $index = null)
     {
-        if ($index == null) {
-            $index = $this->selectedIndex - count($this->results);
+        $targetIndex = $index !== null ? $index : $this->selectedIndex - count($this->results);
+
+        $targetIndex = $this->clamp($targetIndex, 0, count($this->results_pages) - 1);
+
+        $this->dispatch("scroll-to", $this->results_pages[$targetIndex]->url);
+        $this->closeDropdown();
+    }
+
+    public function addAnime()
+    {
+        $query = trim($this->query);
+
+        if (strlen($query) < 1) {
+            return;
         }
 
-        $index = $this->clamp($index, 0, count($this->results_pages) - 1);
+        if (str_starts_with($query, 'id:')) {
+            $id = substr($query, 3);
+            dd($query, $id);
+            // TODO
+            $this->resetInput();
+            $this->closeDropdown();
+            return;
+        }
 
-        $this->dispatch("scroll-to", $this->results_pages[$index]->url);
+        $this->dispatch('show-search-modal', $query);
+        $this->resetInput();
         $this->closeDropdown();
     }
 

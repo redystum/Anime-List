@@ -15,6 +15,8 @@
 
     <livewire:delete-dialog/>
     <livewire:info-modal/>
+    <livewire:search-new-anime/>
+    <livewire:no-m-a-l-client-id-found />
 @endsection
 
 @section('scripts')
