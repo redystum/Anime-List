@@ -212,21 +212,39 @@
                         </div>
 
                         <!-- Genres -->
-                        @if($anime->genres && $anime->genres->count() > 0)
-                            <div>
-                                <h3 class="text-lg font-semibold text-neutral-900 dark:text-neutral-100 mb-4 flex items-center">
-                                    <i class="fas fa-tags text-neutral-500 mr-2"></i>
-                                    Genres
-                                </h3>
-                                <div class="flex flex-wrap gap-3">
-                                    @foreach($anime->genres as $genre)
-                                        <span class="px-4 py-2 bg-neutral-200 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 rounded-full text-sm font-medium shadow-sm border border-neutral-200 dark:border-neutral-600">
-                                            {{ $genre->name }}
-                                        </span>
-                                    @endforeach
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            @if($anime->genres && $anime->genres->count() > 0)
+                                <div>
+                                    <h3 class="text-lg font-semibold text-neutral-900 dark:text-neutral-100 mb-4 flex items-center">
+                                        <i class="fas fa-tags text-neutral-500 mr-2"></i>
+                                        Genres
+                                    </h3>
+                                    <div class="flex flex-wrap gap-3">
+                                        @foreach($anime->genres as $genre)
+                                            <span class="px-4 py-2 bg-neutral-200 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 rounded-full text-sm font-medium shadow-sm border border-neutral-200 dark:border-neutral-600">
+                                                {{ $genre->name }}
+                                            </span>
+                                        @endforeach
+                                    </div>
                                 </div>
-                            </div>
-                        @endif
+                            @endif
+                            @if($anime->studios && $anime->studios->count() > 0)
+                                <div class="border-l border-neutral-300 dark:border-neutral-600 pl-6">
+                                    <h3 class="text-lg font-semibold text-neutral-900 dark:text-neutral-100 mb-4 flex items-center">
+                                        <i class="fas fa-building text-neutral-500 mr-2"></i>
+                                        Studios
+                                    </h3>
+                                    <div class="flex flex-wrap gap-3">
+                                        @foreach($anime->studios as $studio)
+                                            <span class="px-4 py-2 bg-neutral-200 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 rounded-full text-sm font-medium shadow-sm border border-neutral-200 dark:border-neutral-600">
+                                                {{ $studio->name }}
+                                            </span>
+                                        @endforeach
+                                    </div>
+                                </div>
+
+                            @endif
+                        </div>
 
                         <!-- Synopsis -->
                         @if($anime->synopsis)
