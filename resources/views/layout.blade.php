@@ -18,6 +18,7 @@
 <body class="bg-white dark:bg-neutral-900 text-gray-900 dark:text-neutral-100">
 
 <livewire:toasts/>
+<livewire:options-offcanvas/>
 
 <x-navbar/>
 
@@ -29,6 +30,14 @@
 @livewireScripts
 
 @yield('scripts')
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        window.Livewire.on("reloadPage", () => {
+            window.location.reload();
+        });
+    });
+</script>
 </body>
 
 </html>

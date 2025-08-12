@@ -52,7 +52,12 @@ class AnimeList extends Component
 
         $animes = $animes->get();
 
-        return view('livewire.anime-list', compact('animes'));
+        $total_hours = floor($animes->sum('average_ep_duration') / 60);
+        $total_minutes = $animes->sum('average_ep_duration') % 60;
+        $total_time= "{$total_hours}h {$total_minutes}m";
+        $total_eps = $animes->sum('num_episodes');
+
+        return view('livewire.anime-list', compact('animes', 'total_time', 'total_eps'));
     }
 
     public function toggleCompleted(Anime $anime): void

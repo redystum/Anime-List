@@ -22,6 +22,10 @@ class InfoModal extends Component
         $this->show = true;
         $this->notes = $this->anime->notes ?? '';
         $this->personalScore = $this->anime->localScore ?? 0.0;
+
+        if (session('autoUpdate', false)) {
+            $this->updateAnimeInfo();
+        }
     }
 
     public function closeModal()
@@ -98,8 +102,8 @@ class InfoModal extends Component
             return;
         }
 
-        $this->dispatch("update".Anime::LIST_WATCH);
-        $this->dispatch("showToast","Anime '{$anime->title}' has been added to your watch list.", 'success');
+        $this->dispatch("update" . Anime::LIST_WATCH);
+        $this->dispatch("showToast", "Anime '{$anime->title}' has been added to your watch list.", 'success');
     }
 
     public function updateAnimeInfo(){

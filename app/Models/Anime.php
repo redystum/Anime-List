@@ -18,6 +18,10 @@ class Anime extends Model
     const NSFW_GRAY = 'grey';
     const NSFW_BLACK = 'black';
 
+    const STATUS_AIRING = 'currently_airing';
+    const STATUS_FINISHED = 'finished_airing';
+    const STATUS_NOT_YET_AIRED = 'not_yet_aired';
+
 
     protected $table = 'animes';
     public $incrementing = false;

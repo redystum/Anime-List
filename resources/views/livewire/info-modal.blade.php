@@ -365,7 +365,7 @@
                         <div class="flex justify-center mt-8">
                             <button wire:click="updateAnimeInfo"
                                     class="cursor-pointer py-2 px-4 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-700 dark:hover:bg-neutral-600 text-neutral-800 dark:text-neutral-100 rounded-md transition-colors">
-                                <i class="fas fa-arrows-rotate mr-2"></i>Update Anime Information
+                                <i class="fas fa-sync-alt mr-2"></i>Update Anime Information
                             </button>
                         </div>
 

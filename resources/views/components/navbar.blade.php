@@ -1,4 +1,4 @@
-<nav class="bg-white dark:bg-neutral-800 border-b border-neutral-200 dark:border-neutral-700 shadow-sm fixed top-0 z-50 w-full">
+<nav class="bg-white dark:bg-neutral-800 border-b border-neutral-200 dark:border-neutral-700 shadow-sm fixed top-0 z-40 w-full">
     <div class="container mx-auto px-4">
         <div class="flex items-center justify-between h-16">
             <div class="flex items-center space-x-6">
@@ -41,6 +41,12 @@
                             <i class="fas fa-heart"></i>
                         </a>
                     </li>
+                    <li>
+                        <div id="openOptions"
+                             class="cursor-pointer ms-6 text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:text-blue-500 dark:hover:text-blue-400 hover:animate-spin">
+                            <i class="fas fa-gear"></i>
+                        </div>
+                    </li>
                 </ul>
             </div>
 
@@ -51,62 +57,16 @@
         </div>
     </div>
 
-    <div class="absolute top-0 right-0 z-50 h-full me-8 md:flex items-center justify-center hidden text-neutral-900/20 dark:text-neutral-300/20 hover:text-neutral-900/100 hover:dark:text-neutral-300/100 transition-colors duration-200">
-        <i class="fas fa-thumbtack cursor-pointer" id="pinNav"></i>
-        <i class="fas fa-thumbtack-slash cursor-pointer" id="unpinNav"></i>
-    </div>
 </nav>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const pinNav = document.getElementById('pinNav');
-        const unpinNav = document.getElementById('unpinNav');
-        const navbar = document.querySelector('nav');
-        const navStateKey = 'navbarPinned';
-
-        function updateBodyPadding(pinned) {
-            const navHeight = navbar.offsetHeight;
-            if (pinned) {
-                document.body.style.paddingTop = navHeight + 'px';
-                document.documentElement.style.scrollPaddingTop = navHeight + 'px';
-            } else {
-                document.body.style.paddingTop = '0';
-                document.documentElement.style.scrollPaddingTop = navHeight + 'px';
-            }
+        const openOptionsBtn = document.getElementById('openOptions');
+        if (openOptionsBtn) {
+            openOptionsBtn.addEventListener('click', function () {
+                window.Livewire.dispatch('openOptions');
+            });
         }
-
-        function setState(pinned) {
-            if (pinned) {
-                pinNav.style.display = 'none';
-                unpinNav.style.display = 'block';
-                navbar.classList.remove('relative');
-                navbar.classList.add('fixed');
-            } else {
-                pinNav.style.display = 'block';
-                unpinNav.style.display = 'none';
-                navbar.classList.remove('fixed');
-                navbar.classList.add('relative');
-            }
-            updateBodyPadding(pinned);
-            localStorage.setItem(navStateKey, pinned ? 'true' : 'false');
-        }
-
-        const savedState = localStorage.getItem(navStateKey);
-        const isPinned = savedState !== 'false';
-        setState(isPinned);
-
-        pinNav.addEventListener('click', function () {
-            setState(true);
-        });
-
-        unpinNav.addEventListener('click', function () {
-            setState(false);
-        });
-
-        window.addEventListener('resize', function () {
-            const currentState = localStorage.getItem(navStateKey) !== 'false';
-            updateBodyPadding(currentState);
-        });
 
         // Handle smooth scrolling with offset for anchor links
         document.addEventListener('click', function (e) {
@@ -180,5 +140,41 @@
 
             }
         });
+
+        const navbar = document.querySelector('nav');
+
+        function updateBodyPadding(pinned) {
+            const navHeight = navbar.offsetHeight;
+            if (pinned) {
+                document.body.style.paddingTop = navHeight + 'px';
+                document.documentElement.style.scrollPaddingTop = navHeight + 'px';
+            } else {
+                document.body.style.paddingTop = '0';
+                document.documentElement.style.scrollPaddingTop = navHeight + 'px';
+            }
+        }
+
+        function setState(pinned) {
+            if (pinned) {
+                navbar.classList.remove('relative');
+                navbar.classList.add('fixed');
+            } else {
+                navbar.classList.remove('fixed');
+                navbar.classList.add('relative');
+            }
+            updateBodyPadding(pinned);
+        }
+
+        window.Livewire.on('pinNavChanged', (params) => {
+            let pin = params[0];
+            if (pin) {
+                setState(true);
+            } else {
+                setState(false);
+            }
+        });
+
+        const isPinned = @js(session('pinNav', true));
+        setState(isPinned);
     });
 </script>

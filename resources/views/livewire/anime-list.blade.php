@@ -82,7 +82,16 @@
                     >
                 </div>
                 <div class="flex-grow">
-                    <h3 class="font-semibold text-lg text-neutral-800 dark:text-neutral-100">{{ $anime->title }}</h3>
+                    <h3 class="font-semibold text-lg text-neutral-800 dark:text-neutral-100">
+                        {{ $anime->title }}
+                        @if(session("markAiring", false))
+                            @if($anime->status == $anime::STATUS_AIRING)
+                                <i class="fas fa-circle-play ms-6"></i>
+                            @elseif($anime->status == $anime::STATUS_NOT_YET_AIRED)
+                                <i class="fas fa-circle-plus rotate-45 ms-6"></i>
+                            @endif
+                        @endif
+                    </h3>
                     <div class="flex items-center mt-1 text-sm text-neutral-600 dark:text-neutral-400">
                         <span>{{ strtoupper($anime->media_type) }}</span>
                         <span class="mx-2">•</span>
@@ -169,6 +178,20 @@
                 <p>No animes found in this list.</p>
             </div>
         @endforelse
+
+        @if(count($animes) > 0 && session("showStats", false))
+            <div class="flex justify-between items-center p-4 text-sm text-neutral-600 dark:text-neutral-300">
+                <div class="text-sm text-neutral-600 dark:text-neutral-300">
+                    {{ count($animes) }} {{ strtolower($title) }}
+                </div>
+                <div>
+                    {{ $total_time }} total duration
+                </div>
+                <div>
+                    {{ $total_eps }} episodes
+                </div>
+            </div>
+        @endif
 
     </div>
 
