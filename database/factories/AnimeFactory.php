@@ -29,7 +29,7 @@ class AnimeFactory extends Factory
             'synopsis' => $this->faker->paragraph,
             'score' => $this->faker->randomFloat(1, 0, 10),
             'num_scoring_usr' => $this->faker->numberBetween(1000, 100000),
-            'nsfw' => $this->faker->randomElement(['white', 'grey', 'black']),
+            'nsfw' => $this->faker->randomElement(['white', 'gray', 'black']),
             'media_type' => $this->faker->randomElement(['tv', 'movie', 'ova', 'special', 'ona', 'music']),
             'status' => $this->faker->randomElement(['finished_airing', 'currently_airing', 'not_yet_aired']),
             'num_episodes' => $this->faker->numberBetween(1, 50),

@@ -153,27 +153,35 @@ class MalApiRequest
                     Image::where('anime_id', $r['id'])->delete();
                 }
 
-                $anime = Anime::updateOrCreate(
-                    ['id' => $r['id']], [
-                    'id' => $r['id'],
-                    'title' => $r['title'],
-                    'title_jp' => $r['alternative_titles']['ja'] ?? null,
-                    'title_en' => $r['alternative_titles']['en'] ?? null,
-                    'start_date' => $r['start_date'] ?? null,
-                    'end_date' => $r['end_date'] ?? null,
-                    'synopsis' => $r['synopsis'] ?? null,
-                    'score' => $r['mean'] ?? null,
-                    'num_scoring_usr' => $r['num_scoring_users'] ?? null,
-                    'nsfw' => $r['nsfw'] ?? null,
-                    'media_type' => $r['media_type'] ?? null,
-                    'status' => $r['status'] ?? null,
-                    'num_episodes' => $r['num_episodes'] ?? null,
-                    'broadcast_weekday' => $r['broadcast']['day_of_the_week'] ?? null,
-                    'broadcast_time' => $r['broadcast']['start_time'] ?? null,
-                    'average_ep_duration' => round(($r['average_episode_duration'] ?? 0)/60),
-                    'background' => $r['background'] ?? null,
-                    'lastFetch' => now(),
-                ]);
+                try {
+                    $anime = Anime::updateOrCreate(
+                        ['id' => $r['id']], [
+                        'id' => $r['id'],
+                        'title' => $r['title'],
+                        'title_jp' => $r['alternative_titles']['ja'] ?? null,
+                        'title_en' => $r['alternative_titles']['en'] ?? null,
+                        'start_date' => $r['start_date'] ?? null,
+                        'end_date' => $r['end_date'] ?? null,
+                        'synopsis' => $r['synopsis'] ?? null,
+                        'score' => $r['mean'] ?? null,
+                        'num_scoring_usr' => $r['num_scoring_users'] ?? null,
+                        'nsfw' => in_array($r['nsfw'], ['black', 'gray', 'white']) ? $r['nsfw'] : null,
+                            'media_type' => $r['media_type'] ?? null,
+                        'status' => $r['status'] ?? null,
+                        'num_episodes' => $r['num_episodes'] ?? null,
+                        'broadcast_weekday' => $r['broadcast']['day_of_the_week'] ?? null,
+                        'broadcast_time' => $r['broadcast']['start_time'] ?? null,
+                        'average_ep_duration' => round(($r['average_episode_duration'] ?? 0) / 60),
+                        'background' => $r['background'] ?? null,
+                        'lastFetch' => now(),
+                    ]);
+                } catch (\Throwable $e) {
+                    Log::error('Error creating or updating anime: ' . $e->getMessage(), [
+                        'anime_id' => $r['id'] ?? 'unknown',
+                        'exception' => $e
+                    ]);
+                    return null;
+                }
 
                 collect($r['pictures'] ?? [])
                     ->each(function ($item) use ($r) {
