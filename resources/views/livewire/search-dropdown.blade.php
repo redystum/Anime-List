@@ -2,8 +2,7 @@
     <input
             type="text"
             id="searchInput"
-            autofocus
-            wire:model.live.debounce.300ms="query"
+            wire:model.live="query"
             wire:keydown.escape="resetInput"
             wire:keydown.enter="selectItem"
             wire:keydown.arrow-down.prevent="incrementIndex"
