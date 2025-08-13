@@ -9,6 +9,21 @@
      x-cloak
      class="fixed inset-0 overflow-hidden z-50">
 
+    <!-- Hidden file input for import -->
+    <input type="file"
+           id="import-file-input"
+           accept=".zip"
+           wire:model.live="importFile"
+           style="display: none;">
+
+    <script>
+        document.addEventListener('livewire:init', () => {
+            Livewire.on('trigger-file-input', () => {
+                document.getElementById('import-file-input').click();
+            });
+        });
+    </script>
+
     <!-- overlay -->
     <div x-show="isOpen"
          x-transition:enter="transition-opacity ease-linear duration-300"
@@ -146,14 +161,37 @@
                             <i class="fas fa-chevron-right text-neutral-400"></i>
                         </button>
 
-                        <button wire:click="confirmDelete"
-                                class="cursor-pointer w-full flex items-center justify-between p-3 bg-red-100 dark:bg-red-900/50 text-neutral-50 dark:text-neutral-50 rounded-md hover:bg-red-200 dark:hover:bg-red-800 transition-colors">
-                            <div class="flex items-center">
-                                <i class="fas fa-trash-alt mr-3"></i>
-                                <span class="font-medium">Delete Database</span>
+                        @if(!$showDeleteConfirmation)
+                            <button wire:click="confirmDelete"
+                                    class="cursor-pointer w-full flex items-center justify-between p-3 bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-300 rounded-md hover:bg-red-200 dark:hover:bg-red-800 transition-colors">
+                                <div class="flex items-center">
+                                    <i class="fas fa-trash-alt mr-3"></i>
+                                    <span class="font-medium">Delete Database</span>
+                                </div>
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        @else
+                            <div class="space-y-3 p-4 bg-red-100 dark:bg-red-900/50 rounded-md">
+                                <div class="text-center">
+                                    <p class="text-red-700 dark:text-red-300 text-lg font-bold mb-2">
+                                        THIS CANNOT BE UNDONE
+                                    </p>
+                                    <p class="text-white text-sm mb-4">
+                                        This will permanently delete all your anime data.
+                                    </p>
+                                </div>
+                                <div class="flex space-x-3">
+                                    <button wire:click="cancelDelete"
+                                            class="cursor-pointer flex-1 px-4 py-2 bg-neutral-500 hover:bg-neutral-600 text-white rounded-md font-medium transition-colors">
+                                        Cancel
+                                    </button>
+                                    <button wire:click="deleteDatabase"
+                                            class="cursor-pointer px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md font-medium transition-colors text-sm">
+                                        Delete
+                                    </button>
+                                </div>
                             </div>
-                            <i class="fas fa-chevron-right"></i>
-                        </button>
+                        @endif
                     </div>
                 </div>
             </div>
