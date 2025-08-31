@@ -52,8 +52,11 @@ class AnimeList extends Component
 
         $animes = $animes->get();
 
-        $total_hours = floor($animes->sum('average_ep_duration') / 60);
-        $total_minutes = $animes->sum('average_ep_duration') % 60;
+        $total_duration = $animes->sum(function ($anime) {
+            return $anime->average_ep_duration * $anime->num_episodes;
+        });
+        $total_hours = floor($total_duration / 60);
+        $total_minutes = $total_duration % 60;
         $total_time= "{$total_hours}h {$total_minutes}m";
         $total_eps = $animes->sum('num_episodes');
 
