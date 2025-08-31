@@ -19,10 +19,8 @@
                 <option value="lowest_rated">Lowest rated</option>
                 <option value="more_episodes">More Episodes</option>
                 <option value="less_episodes">Less Episodes</option>
-                @if($list_name == $Anime::LIST_FAVORITE)
-                    <option value="most_favorite">Most Favorite</option>
-                    <option value="least_favorite">Least Favorite</option>
-                @endif
+                <option value="most_favorite">Most Favorite</option>
+                <option value="least_favorite">Least Favorite</option>
             </select>
             @if($haveAdd)
                 <button class="px-4 py-2 bg-purple-700 hover:bg-purple-800 text-white rounded-lg transition-colors"
